@@ -7,7 +7,6 @@ import random
 import pytest
 import regex as re
 from transformers import AutoProcessor, AutoTokenizer
-from QEfficient import QEFFAutoModelForSpeechSeq2Seq
 
 from .conftest import (
     MAX_END_TOKENS,
@@ -573,6 +572,8 @@ class TestGranite(_DualQpcTestBase):
 def test_whisper(
     audio_data, model_name, device_group, make_runner, decode_bsz, ctx_len
 ):
+    from QEfficient import QEFFAutoModelForSpeechSeq2Seq
+
     updated_input = [(data, "<|startoftranscript|>") for data in audio_data]
     encoder_ctx_len = 1500
     sampling_params = SamplingParams(temperature=0.0, max_tokens=MAX_END_TOKENS)

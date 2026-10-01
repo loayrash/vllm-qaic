@@ -91,8 +91,9 @@ export PROMETHEUS_MULTIPROC_DIR=${TMPDIR}
 function create_python_venv() {
         mode_env_dir="env_$1"
         mkdir -p ./"${mode_env_dir}" && cd ./"${mode_env_dir}"
-        sudo apt install -y python3.12-venv
-        python3.12 -m venv .
+        # The runner provides system Python with working venv support.
+        # Override with CI_PYTHON when the system Python lacks a torch_qaic wheel.
+        "${CI_PYTHON:-/usr/bin/python3}" -m venv .
         source bin/activate
         python3 -m pip install --upgrade build --trusted-host "devpi.qualcomm.com"
         cd ..
@@ -101,7 +102,13 @@ function create_python_venv() {
 function install_vllm_plugin() {
         mode="$1"
         cd "${VLLM_DIR}"
-        ./scripts/install.sh "$mode"
+        if [ "$mode" = "aot" ]; then
+            # TODO(Loay): Temporary pin to https://github.com/quic/efficient-transformers/pull/1287.
+            # Remove this CI override after it merges to restore the installer default (main).
+            QEFF_BRANCH="${QEFF_BRANCH:-refs/pull/1287/head}" ./scripts/install.sh "$mode"
+        else
+            ./scripts/install.sh "$mode"
+        fi
         # install test dependencies (single source of truth: requirements/test.txt)
         pip3 install -r requirements/test.txt
 }

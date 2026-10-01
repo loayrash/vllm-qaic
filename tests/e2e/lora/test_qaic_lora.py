@@ -28,8 +28,8 @@ ADAPTER_ID_1 = "jashing/tinyllama-energy-lora"
     {
         "aot": dict(
             model_name=BASE_MODEL_NAME,
-            seq_len=64,
-            ctx_len=32,
+            seq_len=32,
+            ctx_len=64,
             decode_bsz=2,
             dtype="mxfp6",
             kv_dtype="mxint8",
@@ -38,8 +38,8 @@ ADAPTER_ID_1 = "jashing/tinyllama-energy-lora"
         ),
         "eager": dict(
             model_name=BASE_MODEL_NAME,
-            seq_len=64,
-            ctx_len=32,
+            seq_len=32,
+            ctx_len=64,
             decode_bsz=2,
             num_device_groups=1,
             device_group_size=1,
